@@ -54,11 +54,8 @@ final class AssetCell: UICollectionViewCell {
         return view
     }()
     
-    private var identifier: String = ""
-    
     override func prepareForReuse() {
         super.prepareForReuse()
-        identifier = ""
         selectdCoverView.isHidden = true
         gifView.isHidden = true
         videoView.isHidden = true
@@ -133,12 +130,12 @@ extension AssetCell {
         asset.check(disable: manager.options.disableRules)
         setOptions(manager.options)
         let options = _PhotoFetchOptions(sizeMode: .thumbnail(100*UIScreen.main.nativeScale), needCache: false)
-        identifier = asset.phAsset.localIdentifier
+        let identifier = asset.identifier
         manager.requestPhoto(for: asset.phAsset, options: options, completion: { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
-                guard self.identifier == asset.phAsset.localIdentifier else { return }
+                guard identifier == asset.identifier else { return }
                 self.imageView.image = asset._image ?? response.image
                 if asset.mediaType == .video && !isPreview {
                     self.videoView.setVideoTime(asset.durationDescription)

@@ -240,12 +240,12 @@ extension AssetPickerViewController {
     private func updateAlbum(_ album: Album) {
         // Update selected assets
         for asset in manager.selectedAssets.reversed() {
-            if !(album.assets.contains { $0.phAsset.localIdentifier == asset.phAsset.localIdentifier }) {
+            if !album.assets.contains(where: { $0 == asset }) {
                 manager.removeSelectedAsset(asset)
             }
         }
         for asset in manager.selectedAssets {
-            if let idx = (album.assets.firstIndex { $0.phAsset.localIdentifier == asset.phAsset.localIdentifier }) {
+            if let idx = album.assets.firstIndex(where: { $0 == asset }) {
                 manager.removeSelectedAsset(asset)
                 manager.addSelectedAsset(album.assets[idx])
             }
