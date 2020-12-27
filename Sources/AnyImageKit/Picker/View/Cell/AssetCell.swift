@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 final class AssetCell: UICollectionViewCell {
     
@@ -126,7 +127,7 @@ extension AssetCell {
         selectButton.isHidden = options.selectionTapAction.hideToolBar && options.selectLimit == 1
     }
     
-    func setContent(_ asset: Asset, manager: PickerManager, animated: Bool = false, isPreview: Bool = false) {
+    func setContent(_ asset: Asset<PHAsset>, manager: PickerManager, animated: Bool = false, isPreview: Bool = false) {
         asset.check(disable: manager.options.disableRules)
         setOptions(manager.options)
         let options = _PhotoFetchOptions(sizeMode: .thumbnail(100*UIScreen.main.nativeScale), needCache: false)
@@ -148,7 +149,7 @@ extension AssetCell {
         updateState(asset, manager: manager, animated: animated, isPreview: isPreview)
     }
     
-    func updateState(_ asset: Asset, manager: PickerManager, animated: Bool = false, isPreview: Bool = false) {
+    func updateState(_ asset: Asset<PHAsset>, manager: PickerManager, animated: Bool = false, isPreview: Bool = false) {
         if asset._images[.edited] != nil {
             editedView.isHidden = false
         } else {

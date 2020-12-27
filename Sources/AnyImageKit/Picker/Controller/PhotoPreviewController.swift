@@ -11,7 +11,7 @@ import Photos
 
 protocol PhotoPreviewControllerDataSource: AnyObject {
     
-    typealias PreviewData = (thumbnail: UIImage?, asset: Asset)
+    typealias PreviewData = (thumbnail: UIImage?, asset: Asset<PHAsset>)
     
     /// 获取需要展示图片的数量
     func numberOfPhotos(in controller: PhotoPreviewController) -> Int
@@ -435,7 +435,7 @@ extension PhotoPreviewController: UICollectionViewDelegate {
                 cell.setImage(data.asset._image)
                 cell.setDownloadingProgress(1.0)
             } else {
-                if let originalImage = manager.cache.read(identifier: cell.asset.identifier, deleteMemoryStorage: false) {
+                if let originalImage = manager.cache.read(identifier: data.asset.identifier, deleteMemoryStorage: false) {
                     cell.setImage(originalImage)
                     cell.setDownloadingProgress(1.0)
                 } else {
@@ -444,7 +444,7 @@ extension PhotoPreviewController: UICollectionViewDelegate {
                 }
             }
         case let cell as VideoPreviewCell:
-            if let originalImage = manager.cache.read(identifier: cell.asset.identifier, deleteMemoryStorage: false) {
+            if let originalImage = manager.cache.read(identifier: data.asset.identifier, deleteMemoryStorage: false) {
                 cell.setImage(originalImage)
             } else {
                 cell.setImage(data.thumbnail)

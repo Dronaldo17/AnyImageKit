@@ -9,32 +9,56 @@
 import UIKit
 import Photos
 
-public class Asset {
-    /// 对应的 PHAsset
-    public let phAsset: PHAsset
-    /// 媒体类型
+public class Asset<Resource: ResourceIdentifiable> {
+    
+    public let resource: Resource
     public let mediaType: MediaType
     
     var _images: [ImageKey: UIImage] = [:]
     var videoDidDownload: Bool = false
     
-    var idx: Int
+    var idx: Int = 0
     var state: State = .unchecked
     var selectedNum: Int = 1
     
-    init(idx: Int, asset: PHAsset, selectOptions: PickerSelectOption) {
+    init(resource: Resource, mediaType: MediaType) {
+        self.resource = resource
+        self.mediaType = mediaType
+    }
+}
+
+extension Asset where Resource == PHAsset {
+    
+    convenience init(idx: Int, asset: PHAsset, selectOptions: PickerSelectOption) {
+        let mediaType = MediaType(asset: asset, selectOptions: selectOptions)
+        self.init(resource: asset, mediaType: mediaType)
         self.idx = idx
-        self.phAsset = asset
-        self.mediaType = MediaType(asset: asset, selectOptions: selectOptions)
+    }
+    
+    var phAsset: PHAsset {
+        return resource
+    }
+    
+    var duration: TimeInterval {
+        return resource.duration
+    }
+    
+    var durationDescription: String {
+        let time = Int(duration)
+        let min = time / 60
+        let sec = time % 60
+        return String(format: "%02ld:%02ld", min, sec)
+    }
+}
+
+extension Asset: ResourceIdentifiable {
+    
+    public var identifier: String {
+        return resource.identifier
     }
 }
 
 extension Asset {
-    
-    /// Identifier PHAsset.localIdentifier
-    public var identifier: String {
-        return phAsset.localIdentifier
-    }
     
     /// 输出图像
     public var image: UIImage {
@@ -43,17 +67,6 @@ extension Asset {
     
     var _image: UIImage? {
         return (_images[.output] ?? _images[.edited]) ?? _images[.initial]
-    }
-    
-    var duration: TimeInterval {
-        return phAsset.duration
-    }
-    
-    var durationDescription: String {
-        let time = Int(duration)
-        let min = time / 60
-        let sec = time % 60
-        return String(format: "%02ld:%02ld", min, sec)
     }
     
     var isReady: Bool {
@@ -141,7 +154,7 @@ extension Asset {
 }
 
 // MARK: - Disable Check
-extension Asset {
+extension Asset where Resource == PHAsset {
 
     func check(disable rules: [AssetDisableCheckRule]) {
         guard isUnchecked else { return }
@@ -156,7 +169,7 @@ extension Asset {
 }
 
 // MARK: - Original Photo
-extension Asset {
+extension Asset where Resource == PHAsset {
     
     /// Fetch Photo Data 获取原图数据
     /// - Note: Only for `MediaType` Photo, GIF, LivePhoto 仅用于媒体类型为照片、GIF、实况
@@ -186,7 +199,7 @@ extension Asset {
 }
 
 // MARK: - Video
-extension Asset {
+extension Asset where Resource == PHAsset {
     
     /// Fetch Video 获取视频，用于播放
     /// - Note: Only for `MediaType` Video 仅用于媒体类型为视频

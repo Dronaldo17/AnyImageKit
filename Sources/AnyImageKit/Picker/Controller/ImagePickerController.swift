@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import Photos
 
 public protocol ImagePickerControllerDelegate: AnyObject {
     
@@ -186,7 +187,7 @@ extension ImagePickerController {
         }
     }
     
-    private func saveEditPhotos(_ assets: [Asset], completion: @escaping (([Asset]) -> Void)) {
+    private func saveEditPhotos(_ assets: [Asset<PHAsset>], completion: @escaping (([Asset<PHAsset>]) -> Void)) {
         #if ANYIMAGEKIT_ENABLE_EDITOR
         guard manager.options.saveEditedAsset else {
             completion(assets)
@@ -217,7 +218,7 @@ extension ImagePickerController {
         #endif
     }
     
-    private func resizeImagesIfNeeded(_ assets: [Asset]) {
+    private func resizeImagesIfNeeded(_ assets: [Asset<PHAsset>]) {
         if !manager.useOriginalImage {
             let limitSize = CGSize(width: manager.options.photoMaxWidth,
                                    height: manager.options.photoMaxWidth)

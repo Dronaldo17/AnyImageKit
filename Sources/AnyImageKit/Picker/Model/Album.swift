@@ -16,7 +16,7 @@ class Album: Equatable {
     let identifier: String
     let title: String
     let isCameraRoll: Bool
-    private(set) var assets: [Asset] = []
+    private(set) var assets: [Asset<PHAsset>] = []
     
     init(fetchResult: PHFetchResult<PHAsset>, identifier: String, title: String?, isCameraRoll: Bool, selectOptions: PickerSelectOption) {
         self.fetchResult = fetchResult
@@ -33,12 +33,12 @@ class Album: Equatable {
 
 extension Album {
     
-    func insertAsset(_ asset: Asset, at: Int, sort: Sort) {
+    func insertAsset(_ asset: Asset<PHAsset>, at: Int, sort: Sort) {
         assets.insert(asset, at: at)
         reloadIndex(sort: sort)
     }
     
-    func addAsset(_ asset: Asset, atLast: Bool) {
+    func addAsset(_ asset: Asset<PHAsset>, atLast: Bool) {
         if atLast {
             assets.append(asset)
         } else {
@@ -50,7 +50,7 @@ extension Album {
 extension Album {
     
     private func fetchAssets(result: PHFetchResult<PHAsset>, selectOptions: PickerSelectOption) {
-        var array: [Asset] = []
+        var array: [Asset<PHAsset>] = []
         let selectPhoto = selectOptions.contains(.photo)
         let selectVideo = selectOptions.contains(.video)
         let selectPhotoGIF = selectOptions.contains(.photoGIF)
@@ -82,7 +82,7 @@ extension Album {
     
     private func reloadIndex(sort: Sort) {
         var idx = 0
-        let array: [Asset]
+        let array: [Asset<PHAsset>]
         switch sort {
         case .asc:
             array = Array(assets[0..<assets.count-1])

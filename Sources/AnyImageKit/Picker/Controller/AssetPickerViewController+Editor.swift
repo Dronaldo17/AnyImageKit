@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import Photos
 
 #if ANYIMAGEKIT_ENABLE_EDITOR
 
 extension AssetPickerViewController {
     
-    func canOpenEditor(with asset: Asset) -> Bool {
+    func canOpenEditor(with asset: Asset<PHAsset>) -> Bool {
         asset.check(disable: manager.options.disableRules)
         if case .disable(let rule) = asset.state {
             let message = rule.alertMessage(for: asset)
@@ -27,10 +28,10 @@ extension AssetPickerViewController {
         return false
     }
     
-    func openEditor(with asset: Asset, indexPath: IndexPath) {
+    func openEditor(with asset: Asset<PHAsset>, indexPath: IndexPath) {
         if asset.phAsset.mediaType == .image {
             if let image = asset._images[.initial] {
-                showEditor(image, identifier: asset.phAsset.localIdentifier, tag: indexPath.item)
+                showEditor(image, identifier: asset.identifier, tag: indexPath.item)
             } else {
                 showWaitHUD()
                 let options = _PhotoFetchOptions(sizeMode: .preview(manager.options.largePhotoMaxWidth))
@@ -40,7 +41,7 @@ extension AssetPickerViewController {
                     case .success(let response):
                         if !response.isDegraded {
                             hideHUD()
-                            self.showEditor(response.image, identifier: asset.phAsset.localIdentifier, tag: indexPath.item)
+                            self.showEditor(response.image, identifier: asset.identifier, tag: indexPath.item)
                         }
                     case .failure(let error):
                         hideHUD()
@@ -49,7 +50,7 @@ extension AssetPickerViewController {
                 }
             }
         } else if asset.phAsset.mediaType == .video {
-            manager.cancelFetch(for: asset.phAsset.localIdentifier)
+            manager.cancelFetch(for: asset.identifier)
             var videoOptions = manager.options.editorVideoOptions
             videoOptions.enableDebugLog = manager.options.enableDebugLog
             let image = asset._images[.initial]
