@@ -302,7 +302,7 @@ extension PhotoPreviewController {
         indexView.currentIndex = currentIndex
         
         if manager.options.allowUseOriginalImage {
-            toolBar.originalButton.isHidden = data.asset.phAsset.mediaType != .image
+            toolBar.originalButton.isHidden = data.asset.resource.mediaType != .image
         }
         #if ANYIMAGEKIT_ENABLE_EDITOR
         autoSetEditorButtonHidden()

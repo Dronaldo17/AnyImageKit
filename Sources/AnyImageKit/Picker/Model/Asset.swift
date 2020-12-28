@@ -35,10 +35,6 @@ extension Asset where Resource == PHAsset {
         self.idx = idx
     }
     
-    var phAsset: PHAsset {
-        return resource
-    }
-    
     var duration: TimeInterval {
         return resource.duration
     }
@@ -177,11 +173,11 @@ extension Asset where Resource == PHAsset {
     /// - Parameter completion: Photo Data Fetch Completion 原图获取结果回调
     @discardableResult
     public func fetchPhotoData(options: PhotoDataFetchOptions = .init(), completion: @escaping PhotoDataFetchCompletion) -> PHImageRequestID {
-        guard phAsset.mediaType == .image else {
+        guard resource.mediaType == .image else {
             completion(.failure(.invalidMediaType), 0)
             return 0
         }
-        return ExportTool.requestPhotoData(for: phAsset, options: options, completion: completion)
+        return ExportTool.requestPhotoData(for: resource, options: options, completion: completion)
     }
     
     /// Fetch Photo URL 获取原图路径
@@ -190,11 +186,11 @@ extension Asset where Resource == PHAsset {
     /// - Parameter completion: Photo URL Fetch Completion 原图路径获取结果回调
     @discardableResult
     public func fetchPhotoURL(options: PhotoURLFetchOptions = .init(), completion: @escaping PhotoURLFetchCompletion) -> PHImageRequestID {
-        guard phAsset.mediaType == .image else {
+        guard resource.mediaType == .image else {
             completion(.failure(.invalidMediaType), 0)
             return 0
         }
-        return ExportTool.requestPhotoURL(for: phAsset, options: options, completion: completion)
+        return ExportTool.requestPhotoURL(for: resource, options: options, completion: completion)
     }
 }
 
@@ -207,11 +203,11 @@ extension Asset where Resource == PHAsset {
     /// - Parameter completion: Video Fetch Completion 视频获取结果回调
     @discardableResult
     public func fetchVideo(options: VideoFetchOptions = .init(), completion: @escaping VideoFetchCompletion) -> PHImageRequestID {
-        guard phAsset.mediaType == .video else {
+        guard resource.mediaType == .video else {
             completion(.failure(.invalidMediaType), 0)
             return 0
         }
-        return ExportTool.requestVideo(for: phAsset, options: options, completion: completion)
+        return ExportTool.requestVideo(for: resource, options: options, completion: completion)
     }
     
     /// Fetch Video URL 获取视频路径，用于传输
@@ -220,11 +216,11 @@ extension Asset where Resource == PHAsset {
     /// - Parameter completion: Video URL Fetch Completion 视频路径获取结果回调
     @discardableResult
     public func fetchVideoURL(options: VideoURLFetchOptions = .init(), completion: @escaping VideoURLFetchCompletion) -> PHImageRequestID {
-        guard phAsset.mediaType == .video else {
+        guard resource.mediaType == .video else {
             completion(.failure(.invalidMediaType), 0)
             return 0
         }
-        return ExportTool.requestVideoURL(for: phAsset, options: options, completion: completion)
+        return ExportTool.requestVideoURL(for: resource, options: options, completion: completion)
     }
 }
 

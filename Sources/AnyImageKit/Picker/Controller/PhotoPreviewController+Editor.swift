@@ -16,13 +16,13 @@ extension PhotoPreviewController {
     /// ToolBar - Edit
     @objc func editButtonTapped(_ sender: UIButton) {
         guard let data = dataSource?.previewController(self, assetOfIndex: currentIndex) else { return }
-        if data.asset.phAsset.mediaType == .image {
+        if data.asset.resource.mediaType == .image {
             if let image = data.asset._images[.initial] {
                 showEditor(image, identifier: data.asset.identifier)
             } else {
                 showWaitHUD()
                 let options = _PhotoFetchOptions(sizeMode: .preview(manager.options.largePhotoMaxWidth))
-                manager.requestPhoto(for: data.asset.phAsset, options: options) { [weak self] result in
+                manager.requestPhoto(for: data.asset.resource, options: options) { [weak self] result in
                     guard let self = self else { return }
                     hideHUD()
                     switch result {
@@ -35,12 +35,12 @@ extension PhotoPreviewController {
                     }
                 }
             }
-        } else if data.asset.phAsset.mediaType == .video {
+        } else if data.asset.resource.mediaType == .video {
             manager.cancelFetch(for: data.asset.identifier)
             var videoOptions = manager.options.editorVideoOptions
             videoOptions.enableDebugLog = manager.options.enableDebugLog
             let image = data.asset._images[.initial] ?? data.thumbnail
-            let controller = ImageEditorController(video: data.asset.phAsset, placeholderImage: image, options: videoOptions, delegate: self)
+            let controller = ImageEditorController(video: data.asset.resource, placeholderImage: image, options: videoOptions, delegate: self)
             present(controller, animated: false, completion: nil)
         }
     }
@@ -62,9 +62,9 @@ extension PhotoPreviewController {
         guard let data = dataSource?.previewController(self, assetOfIndex: currentIndex) else { return }
         guard let cell = (collectionView.visibleCells.compactMap{ $0 as? PreviewCell }.filter{ $0.asset == data.asset }.first), cell.isDownloaded else { return }
         
-        if data.asset.phAsset.mediaType == .image && manager.options.editorOptions.contains(.photo) {
+        if data.asset.resource.mediaType == .image && manager.options.editorOptions.contains(.photo) {
             toolBar.leftButton.isHidden = false
-        } else if data.asset.phAsset.mediaType == .video && manager.options.editorOptions.contains(.video) {
+        } else if data.asset.resource.mediaType == .video && manager.options.editorOptions.contains(.video) {
             toolBar.leftButton.isHidden = false
         }
     }

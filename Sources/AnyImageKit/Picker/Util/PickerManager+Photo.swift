@@ -66,9 +66,9 @@ extension PickerManager {
         if let asset = options.orderByDate == .asc ? album.assets.last : album.assets.first {
             let phAsset: PHAsset
             if asset.isCamera, let secondAsset = options.orderByDate == .asc ? album.assets.dropLast().last : album.assets.dropFirst().first {
-                phAsset = secondAsset.phAsset
+                phAsset = secondAsset.resource
             } else {
-                phAsset = asset.phAsset
+                phAsset = asset.resource
             }
             let options = _PhotoFetchOptions(sizeMode: .thumbnail(100*UIScreen.main.nativeScale), needCache: false)
             requestPhoto(for: phAsset, options: options, completion: completion)

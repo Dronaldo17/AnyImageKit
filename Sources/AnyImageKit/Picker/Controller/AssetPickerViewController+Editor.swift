@@ -20,22 +20,22 @@ extension AssetPickerViewController {
             showAlert(message: message)
             return false
         }
-        if asset.phAsset.mediaType == .image && manager.options.editorOptions.contains(.photo) {
+        if asset.resource.mediaType == .image && manager.options.editorOptions.contains(.photo) {
             return true
-        } else if asset.phAsset.mediaType == .video && manager.options.editorOptions.contains(.video) {
+        } else if asset.resource.mediaType == .video && manager.options.editorOptions.contains(.video) {
             return true
         }
         return false
     }
     
     func openEditor(with asset: Asset<PHAsset>, indexPath: IndexPath) {
-        if asset.phAsset.mediaType == .image {
+        if asset.resource.mediaType == .image {
             if let image = asset._images[.initial] {
                 showEditor(image, identifier: asset.identifier, tag: indexPath.item)
             } else {
                 showWaitHUD()
                 let options = _PhotoFetchOptions(sizeMode: .preview(manager.options.largePhotoMaxWidth))
-                manager.requestPhoto(for: asset.phAsset, options: options) { [weak self] result in
+                manager.requestPhoto(for: asset.resource, options: options) { [weak self] result in
                     guard let self = self else { return }
                     switch result {
                     case .success(let response):
@@ -49,12 +49,12 @@ extension AssetPickerViewController {
                     }
                 }
             }
-        } else if asset.phAsset.mediaType == .video {
+        } else if asset.resource.mediaType == .video {
             manager.cancelFetch(for: asset.identifier)
             var videoOptions = manager.options.editorVideoOptions
             videoOptions.enableDebugLog = manager.options.enableDebugLog
             let image = asset._images[.initial]
-            let controller = ImageEditorController(video: asset.phAsset, placeholderImage: image, options: videoOptions, delegate: self)
+            let controller = ImageEditorController(video: asset.resource, placeholderImage: image, options: videoOptions, delegate: self)
             present(controller, animated: false, completion: nil)
         }
     }

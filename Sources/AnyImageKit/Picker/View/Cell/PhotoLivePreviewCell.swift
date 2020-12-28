@@ -114,7 +114,7 @@ extension PhotoLivePreviewCell {
                     self.setDownloadingProgress(progress)
                 }
             }
-            self.manager.requestPhotoLive(for: self.asset.phAsset, options: options) { result in
+            self.manager.requestPhotoLive(for: self.asset.resource, options: options) { result in
                 switch result {
                 case .success(let response):
                     DispatchQueue.main.async { [weak self] in

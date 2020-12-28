@@ -50,7 +50,7 @@ extension PhotoPreviewCell {
         let id = asset.identifier
         if imageView.image == nil { // thumbnail
             let options = _PhotoFetchOptions(sizeMode: .thumbnail(100*UIScreen.main.nativeScale), needCache: false)
-            manager.requestPhoto(for: asset.phAsset, options: options, completion: { [weak self] result in
+            manager.requestPhoto(for: asset.resource, options: options, completion: { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(let response):
@@ -69,7 +69,7 @@ extension PhotoPreviewCell {
                 self.setDownloadingProgress(progress)
             }
         }
-        manager.requestPhoto(for: asset.phAsset, options: options) { [weak self] result in
+        manager.requestPhoto(for: asset.resource, options: options) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
