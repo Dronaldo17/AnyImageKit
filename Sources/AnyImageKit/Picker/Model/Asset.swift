@@ -3,7 +3,7 @@
 //  AnyImageKit
 //
 //  Created by 刘栋 on 2019/9/16.
-//  Copyright © 2019 AnyImageProject.org. All rights reserved.
+//  Copyright © 2019-2021 AnyImageProject.org. All rights reserved.
 //
 
 import UIKit
@@ -54,7 +54,7 @@ extension Asset: ResourceIdentifiable {
     }
 }
 
-extension Asset {
+extension Asset where Resource == PHAsset {
     
     /// 输出图像
     public var image: UIImage {
@@ -75,8 +75,10 @@ extension Asset {
     }
     
     var isCamera: Bool {
-        return idx == -1
+        return idx == Asset.cameraItemIdx
     }
+    
+    static let cameraItemIdx: Int = -1
 }
 
 extension Asset: Equatable {
@@ -93,7 +95,7 @@ extension Asset: Hashable {
     }
 }
 
-extension Asset: CustomStringConvertible {
+extension Asset: CustomStringConvertible where Resource == PHAsset {
     
     public var description: String {
         return "<Asset> \(identifier) mediaType=\(mediaType) image=\(image)"
